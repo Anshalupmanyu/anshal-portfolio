@@ -10,7 +10,7 @@ export const ContactForm: React.FC = () => {
 
   const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
@@ -24,13 +24,46 @@ export const ContactForm: React.FC = () => {
       return;
     }
 
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+    if (!accessKey) {
+      setError(
+        "Contact form access key is not configured. Please add NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY to .env.local"
+      );
+      return;
+    }
+
     setStatus("submitting");
 
-    // Placeholder submission handler (Can be wired to Resend, Formspree, or an API route)
-    setTimeout(() => {
-      setStatus("success");
-      setFormData({ name: "", email: "", message: "" });
-    }, 800);
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          message: formData.message.trim(),
+          from_name: `${formData.name.trim()} via Portfolio`,
+          subject: `Portfolio Contact: Message from ${formData.name.trim()}`,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setStatus("success");
+        setFormData({ name: "", email: "", message: "" });
+      } else {
+        setError(data.message || "Failed to send message. Please try again or email directly.");
+        setStatus("idle");
+      }
+    } catch {
+      setError("A network error occurred while sending. Please try again or email directly.");
+      setStatus("idle");
+    }
   };
 
   return (
