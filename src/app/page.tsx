@@ -8,7 +8,6 @@ import {
   Mail,
   Github,
   Linkedin,
-  Twitter,
   Briefcase,
   GraduationCap,
   Award,
@@ -303,15 +302,6 @@ export default function PortfolioPage() {
                     >
                       <Github className="h-3.5 w-3.5 text-zinc-400" />
                       <span>GitHub</span>
-                    </a>
-                    <a
-                      href={siteConfig.socials.twitter}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900 px-3.5 py-2 text-xs font-medium text-zinc-300 hover:border-zinc-700 hover:text-white transition-colors"
-                    >
-                      <Twitter className="h-3.5 w-3.5 text-zinc-400" />
-                      <span>Twitter / X</span>
                     </a>
                   </div>
                 </div>
