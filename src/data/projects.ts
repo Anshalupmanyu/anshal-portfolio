@@ -33,3 +33,4 @@ export const projectsData: Project[] = [
     githubUrl: "https://github.com/anshalupmanyu",
   },
 ];
+
